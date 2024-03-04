@@ -1,0 +1,43 @@
+CREATE TABLE delay_flights (
+    Id INT,
+    Year INT,
+    Month INT,
+    DayofMonth INT,
+    DayOfWeek INT,
+    DepTime INT,
+    CRSDepTime INT,
+    ArrTime INT,
+    CRSArrTime INT,
+    UniqueCarrier STRING,
+    FlightNum INT,
+    TailNum STRING,
+    ActualElapsedTime INT,
+    CRSElapsedTime INT,
+    AirTime INT,
+    ArrDelay DOUBLE,
+    DepDelay DOUBLE,
+    Origin STRING,
+    Dest STRING,
+    Distance INT,
+    TaxiIn INT,
+    Taxiout INT,
+    Cancelled INT,
+    CancellationCode STRING,
+    Diverted DOUBLE,
+    CarrierDelay INT,
+    WeatherDelay INT,
+    NASDelay INT,
+    SecurityDelay INT,
+    LateAircraftDelay INT
+);
+
+
+LOAD DATA INPATH 's3://airline-delay-dilan/input/DelayedFlights-updated.csv' OVERWRITE INTO TABLE delay_flights;
+
+SELECT Year, avg((CarrierDelay / ArrDelay)*100) avg_carrier_delay from delay_flights WHERE Year >= 2003 AND Year <= 2010 GROUP BY Year ORDER BY Year ASC;
+SELECT Year, avg((WeatherDelay /ArrDelay)*100) avg_weather_delay from delay_flights WHERE Year >= 2003 AND Year <= 2010 GROUP BY Year ORDER BY Year ASC;
+SELECT Year, avg((NASDelay /ArrDelay)*100) avg_nas_delay from delay_flights WHERE Year >= 2003 AND Year <= 2010 GROUP BY Year ORDER BY Year ASC;
+SELECT Year, avg((SecurityDelay /ArrDelay)*100) avg_security_delay from delay_flights WHERE Year >= 2003 AND Year <= 2010 GROUP BY Year ORDER BY Year ASC;
+SELECT Year, avg((LateAircraftDelay /ArrDelay)*100) avg_late_aircraft_delay from delay_flights WHERE Year >= 2003 AND Year <= 2010 GROUP BY Year ORDER BY Year ASC;
+
+
